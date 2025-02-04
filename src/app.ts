@@ -13,7 +13,7 @@ app.set('layout', 'layouts/layout'); // Указываем путь к осно�
 
 // Middleware
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, '../public')));
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Роуты
 app.use('/users', userRouter);
