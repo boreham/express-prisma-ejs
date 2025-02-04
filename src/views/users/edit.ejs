@@ -1,0 +1,11 @@
+<h1 class="my-4">Edit User</h1>
+<form action="/users/<%= user.id %>" method="post">
+  <div class="mb-3">
+    <input type="text" name="name" class="form-control" value="<%= user.name %>" required>
+  </div>
+  <div class="mb-3">
+    <input type="email" name="email" class="form-control" value="<%= user.email %>" required>
+  </div>
+  <button type="submit" class="btn btn-primary">Update</button>
+</form>
+<a href="/users" class="btn btn-secondary mt-3">Back to Users</a>
