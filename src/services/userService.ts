@@ -47,7 +47,7 @@ export const getUser = async (id: number): Promise<User | null> => {
   return userRepository.getUserById(id);
 };
 
-export const createUser = async (userData: Omit<User, 'id'>): Promise<User> => {
+export const createUser = async (userData: { name: string; email: string }): Promise<User> => {
   return userRepository.createUser(userData);
 };
 

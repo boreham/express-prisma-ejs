@@ -39,9 +39,13 @@ export const searchUsersCount = async (query: string): Promise<number> => {
   });
 };
 
-export const createUser = async (userData: Omit<User, 'id'>): Promise<User> => {
+export const createUser = async (userData: { name: string; email: string }): Promise<User> => {
   return prisma.user.create({
-    data: userData,
+    data: {
+      ...userData,
+      createdAt: new Date(), // Добавляем createdAt
+      updatedAt: new Date(), // Добавляем updatedAt
+    },
   });
 };
 
