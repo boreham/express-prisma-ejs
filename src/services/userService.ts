@@ -1,8 +1,46 @@
 import * as userRepository from '../repositories/userRepository';
 import { User } from '@prisma/client';
 
-export const getAllUsers = async (): Promise<User[]> => {
-  return userRepository.getUsers();
+export const getAllUsers = async (
+  page: number,
+  limit: number,
+  sortBy: string = 'id',
+  sortOrder: 'asc' | 'desc' = 'asc',
+  searchQuery: string = ''
+): Promise<{
+  users: User[];
+  total: number;
+  totalPages: number;
+  currentPage: number;
+  limit: number;
+  sortBy: string;
+  sortOrder: 'asc' | 'desc';
+  searchQuery: string;
+}> => {
+  const skip = (page - 1) * limit;
+
+  const [users, total] = searchQuery
+    ? await Promise.all([
+        userRepository.searchUsers(searchQuery, skip, limit, sortBy, sortOrder),
+        userRepository.searchUsersCount(searchQuery),
+      ])
+    : await Promise.all([
+        userRepository.getUsers(skip, limit, sortBy, sortOrder),
+        userRepository.getUsersCount(),
+      ]);
+
+  const totalPages = Math.ceil(total / limit);
+
+  return {
+    users,
+    total,
+    totalPages,
+    currentPage: page,
+    limit,
+    sortBy,
+    sortOrder,
+    searchQuery,
+  };
 };
 
 export const getUser = async (id: number): Promise<User | null> => {

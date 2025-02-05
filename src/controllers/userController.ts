@@ -3,10 +3,21 @@ import * as userService from '../services/userService';
 import { User } from '@prisma/client';
 
 export const getUsers = async (req: Request, res: Response): Promise<void> => {
-  const users = await userService.getAllUsers();
-  res.render('users/index', { 
-    title: 'User List', 
-    users 
+  const page = parseInt(req.query.page as string) || 1;
+  const limit = parseInt(req.query.limit as string) || 10;
+  const sortBy = (req.query.sortBy as string) || 'id';
+  const sortOrder = req.query.sortOrder === 'desc' ? 'desc' : 'asc';
+  const searchQuery = (req.query.search as string) || '';
+
+  // Валидация параметров
+  const validPage = page > 0 ? page : 1;
+  const validLimit = limit > 0 && limit <= 100 ? limit : 10;
+
+  const data = await userService.getAllUsers(validPage, validLimit, sortBy, sortOrder, searchQuery);
+
+  res.render('users/index', {
+    title: 'User List',
+    ...data,
   });
 };
 
